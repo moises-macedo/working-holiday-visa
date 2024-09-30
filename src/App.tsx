@@ -1,5 +1,6 @@
 import {
     ComponentPropsWithoutRef,
+    Fragment,
     memo,
     useCallback,
     useId,
@@ -14,6 +15,8 @@ function App() {
     const personalDetailsText = [
         "Family name (as in passport)",
         "Given name 1 (as in passport)",
+        "Given name 2 (as in passport)",
+        "Gender R: FEMALE (selecionar opção)",
         "Date of birth",
         "Country of birth",
         "Street Name",
@@ -33,6 +36,8 @@ function App() {
         "Please re-enter Passport Number",
         "Passport Expiry Date",
     ];
+
+    const payment =['Payer Name','CARD NUMBER','Date','CSC','Cardholder']
 
     const handleCopy = useCallback((text: string) => {
         navigator.clipboard.writeText(text);
@@ -54,7 +59,7 @@ function App() {
 
     return (
         <>
-            <main className="w-full px-5 py-10 space-y-7">
+            <main className="w-full px-5 py-10 space-y-7 max-w-5xl mx-auto">
                 <h1 className=" text-xl text-center lg:text-5xl font-bold text-blue-950">
                     Formulário - Colinha working holiday visa
                 </h1>
@@ -67,15 +72,32 @@ function App() {
                     </h2>
                     {personalDetailsText.map((el, index) => {
                         return (
-                            <InputText
-                                key={index}
-                                label={el}
-                                defaultValue={retrieveData(el) ?? ""}
-                                onChange={(e) => saveValue(e.target.value, el)}
-                                onCopy={() =>
-                                    handleCopy(retrieveData(el) ?? "")
-                                }
-                            />
+                            <Fragment key={index}>
+                                {el ===
+                                "Gender R: FEMALE (selecionar opção)" ? (
+                                    <InputOption
+                                        label={el}
+                                        defaultValue={retrieveData(el) ?? ""}
+                                        onChange={(e) =>
+                                            saveValue(e.target.value, el)
+                                        }
+                                        onCopy={() =>
+                                            handleCopy(retrieveData(el) ?? "")
+                                        }
+                                    />
+                                ) : (
+                                    <InputText
+                                        label={el}
+                                        defaultValue={retrieveData(el) ?? ""}
+                                        onChange={(e) =>
+                                            saveValue(e.target.value, el)
+                                        }
+                                        onCopy={() =>
+                                            handleCopy(retrieveData(el) ?? "")
+                                        }
+                                    />
+                                )}
+                            </Fragment>
                         );
                     })}
                     {personalDetailsOption.map((el, index) => {
@@ -293,6 +315,22 @@ function App() {
                         }
                     />
                     <hr className="border-black border-dashed" />
+                    <h2 className="px-5 text-2xl font-bold text-blue-950 uppercase">
+                        *Payment
+                    </h2>
+                    {payment.map((el, index) => {
+                        return (
+                            <InputText
+                                key={index}
+                                label={el}
+                                defaultValue={retrieveData(el) ?? ""}
+                                onChange={(e) => saveValue(e.target.value, el)}
+                                onCopy={() =>
+                                    handleCopy(retrieveData(el) ?? "")
+                                }
+                            />
+                        );
+                    })}
                 </form>
             </main>
 
@@ -325,7 +363,9 @@ const InputText = memo(({ label, onCopy, ...props }: InputTextProps) => {
             <label
                 htmlFor={id}
                 className={`select-none col-span-2 font-semibold text-lg w-fit ${
-                    copy ? "text-green-800 bg-green-100 line-through" : "text-blue-950"
+                    copy
+                        ? "text-green-800 bg-green-100 line-through"
+                        : "text-blue-950"
                 }`}
             >
                 {label}
@@ -340,7 +380,7 @@ const InputText = memo(({ label, onCopy, ...props }: InputTextProps) => {
                 />
                 <button
                     onClick={() => {
-                        setCopy((prev) => !prev), onCopy();
+                        setCopy(true), onCopy();
                     }}
                     type="button"
                     className="p-2 rounded-lg bg-blue-700 hover:bg-blue-800 transition-colors active:bg-blue-950 text-white font-semibold  w-full max-w-24 md:max-w-40"

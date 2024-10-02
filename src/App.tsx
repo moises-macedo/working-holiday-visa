@@ -37,7 +37,7 @@ function App() {
         "Passport Expiry Date",
     ];
 
-    const payment =['Payer Name','CARD NUMBER','Date','CSC','Cardholder']
+    const payment = ["Payer Name", "CARD NUMBER", "Date", "CSC", "Cardholder"];
 
     const handleCopy = useCallback((text: string) => {
         navigator.clipboard.writeText(text);
@@ -316,7 +316,7 @@ function App() {
                     />
                     <hr className="border-black border-dashed" />
                     <h2 className="px-5 text-2xl font-bold text-blue-950 uppercase">
-                        *Payment
+                        *Payment - 1
                     </h2>
                     {payment.map((el, index) => {
                         return (
@@ -325,6 +325,22 @@ function App() {
                                 label={el}
                                 defaultValue={retrieveData(el) ?? ""}
                                 onChange={(e) => saveValue(e.target.value, el)}
+                                onCopy={() =>
+                                    handleCopy(retrieveData(el) ?? "")
+                                }
+                            />
+                        );
+                    })}
+                    <h2 className="px-5 text-2xl font-bold text-blue-950 uppercase">
+                        *Payment - 2
+                    </h2>
+                    {payment.map((el, index) => {
+                        return (
+                            <InputText
+                                key={index}
+                                label={el}
+                                defaultValue={retrieveData(el+index) ?? ""}
+                                onChange={(e) => saveValue(e.target.value, (el+index))}
                                 onCopy={() =>
                                     handleCopy(retrieveData(el) ?? "")
                                 }
@@ -375,7 +391,11 @@ const InputText = memo(({ label, onCopy, ...props }: InputTextProps) => {
                     id={id}
                     type="text"
                     placeholder={label}
-                    className="border p-2 rounded-lg placeholder:text-sm w-full text-gray-900 font-medium"
+                    className={`border p-2 rounded-lg placeholder:text-sm w-full  font-medium ${
+                        copy
+                            ? "border-green-800 text-green-800"
+                            : "text-gray-900"
+                    }`}
                     {...props}
                 />
                 <button
@@ -383,7 +403,9 @@ const InputText = memo(({ label, onCopy, ...props }: InputTextProps) => {
                         setCopy(true), onCopy();
                     }}
                     type="button"
-                    className="p-2 rounded-lg bg-blue-700 hover:bg-blue-800 transition-colors active:bg-blue-950 text-white font-semibold  w-full max-w-24 md:max-w-40"
+                    className={`p-2 rounded-lg  transition-colors  text-white font-semibold  w-full max-w-24 md:max-w-40 ${
+                        copy ? "bg-green-700 active:bg-green-900 hover:bg-green-800" : "bg-blue-700 active:bg-blue-950 hover:bg-blue-800"
+                    }`}
                 >
                     Copiar
                 </button>
